@@ -4,17 +4,24 @@ const request   = require('supertest');
 const {app}     = require('../server');
 const {Todo}    = require('../models/todo');
 
+var text = 'Test todo text';
 
+/*
 beforeEach((done) => {
-    Todo.remove({}).then(() => {
+    Todo.find({text: text}).then((res) => {
+        if(res) {
+            console.log(res);
+        }
+
         done();
     });
 });
+*/
+
 
 describe('POST /todos', () => {
+    /*
     it('It should create a new todo', (done) => {
-        var text = 'Test todo text';
-
         request(app)
             .post('/todos')
             .send({text: text})
@@ -28,8 +35,8 @@ describe('POST /todos', () => {
                     return done(e);
                 }
 
-                Todo.find().then((todos) => {
-                    expect(todos.length).toBe(1);
+                Todo.find({text: text}).then((todos) => {
+
                     expect(todos[0].text).toBe(text);
 
                     done();
@@ -40,6 +47,7 @@ describe('POST /todos', () => {
             });
 
     });
+    */
 
     it('Should not create todo', (done) => {
         request(app)
@@ -57,6 +65,26 @@ describe('POST /todos', () => {
                 }).catch((e) => {
                     done(e);
                 });
+            });
+    });
+
+});
+
+describe('GET /todos', () => {
+    it('It should get todos', (done) => {
+        request(app)
+            .get('/todos')
+            .send()
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.length).toBe(17);
+            })
+            .end((e, res) => {
+                if(e) {
+                    return done(e);
+                }
+
+                done();
             });
     });
 });
