@@ -34,6 +34,11 @@ var {SysError}  = require('./models/sys-error');
 /**
  *
  */
+const utils = require('./utils/utils');
+
+/**
+ *
+ */
 var app = express();
 
 // middleware
@@ -43,12 +48,13 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+
 /**
  *
  */
 app.use((req, res, next) => {
-    // if is POST method, must parse JSON
-    if(req.method === 'POST') {
+    // if is POST or PUT method, must parse JSON
+    if(req.method === 'POST' || req.method === 'PUT') {
         try{
             var data = req.body;
 
@@ -58,24 +64,30 @@ app.use((req, res, next) => {
                 throw new Error(`Request body is empty: ${strData}`);
             }
 
-            // is is an Object treat as it is
+            // if it is an Object treat as it is
             if(data instanceof Object) {
-                var data = JSON.parse(Object.keys(data)[0]);
+                try {
+                    if(utils.isJSON(Object.keys(data)[0])) {
+                        data = JSON.parse(Object.keys(data)[0]);
+                    }
 
-                req.body = data;
+                    req.body = data;
+                } catch(e) {
+                    res.status(400).send(e.toString());
+                }
             }
 
             next();
         } catch(e) {
             res.status(400).send(e.toString());
         }
+    } else {
+        next();
     }
 });
 
 module.exports = {
-    app: app,
-    express: express,
-    bodyParse: bodyParser
+    app: app
 };
 
 /**
@@ -84,6 +96,8 @@ module.exports = {
 var todoRoutes = require('./routes/todo');
 //var userRoutes = require('./routes/user');
 
-app.listen(3000, () => {
+var listener = app.listen(3000, () => {
     console.log('Listen on port 3000');
+
+    console.log('Server started on port %d', listener.address().port);
 });

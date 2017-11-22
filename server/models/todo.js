@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 /**
- *
+ * @type {*|Object}
  */
 var Todo = mongoose.model('Todo', {
     text: {
