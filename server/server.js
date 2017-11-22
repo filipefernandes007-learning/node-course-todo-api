@@ -48,11 +48,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-
 /**
  *
  */
 app.use((req, res, next) => {
+    debugger;
     // if is POST or PUT method, must parse JSON
     if(req.method === 'POST' || req.method === 'PUT') {
         try{
@@ -68,6 +68,7 @@ app.use((req, res, next) => {
             if(data instanceof Object) {
                 try {
                     if(utils.isJSON(Object.keys(data)[0])) {
+                        console.log('Parse JSON');
                         data = JSON.parse(Object.keys(data)[0]);
                     }
 
@@ -86,6 +87,7 @@ app.use((req, res, next) => {
     }
 });
 
+
 module.exports = {
     app: app
 };
@@ -98,6 +100,5 @@ var todoRoutes = require('./routes/todo');
 
 var listener = app.listen(3000, () => {
     console.log('Listen on port 3000');
-
     console.log('Server started on port %d', listener.address().port);
 });
