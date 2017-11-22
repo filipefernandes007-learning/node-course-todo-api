@@ -28,7 +28,6 @@ var bodyParser = require('body-parser');
  * @type {*|Mongoose}
  */
 var {mongoose}  = require('./db/mongoose');
-var {Todo}      = require('./models/todo'); // the same as var Todo = require('./models/todo').Todo;
 var {User}      = require('./models/user');
 var {SysError}  = require('./models/sys-error');
 
@@ -36,8 +35,6 @@ var {SysError}  = require('./models/sys-error');
  *
  */
 var app = express();
-
-//try{req.body = JSON.parse(Object.keys(req.body)[0])}catch(err){req.body = req.body}
 
 // middleware
 app.use(bodyParser.json());
@@ -70,9 +67,7 @@ app.use((req, res, next) => {
 
             next();
         } catch(e) {
-            var error = new SysError({text: `Error in middleware for parse data: ${e.toString()}`});
-
-            res.status(400).send(error.toString());
+            res.status(400).send(e.toString());
         }
     }
 });

@@ -2,7 +2,7 @@
  *
  */
 var {app}      = require('../server');
-var {Todo}     = require('../models/todo');
+var {Todo}     = require('../models/todo'); // the same as var Todo = require('./models/todo').Todo;
 var {SysError} = require('../models/sys-error');
 
 app.post('/todos', (req, res) => {
@@ -13,14 +13,10 @@ app.post('/todos', (req, res) => {
         todo.save().then((doc) => {
             res.send(doc);
         }, (e) => {
-            var error = new SysError({text: `Error creating todo ${e.toString()}`});
-
-            res.send(error.toString());
+            res.status(400).send(e);
         });
 
     } catch(e) {
-        var error = new SysError({text: `Error POST /todos ${e.toString()}`});
-
-        res.status(400).send(error.toString());
+        res.status(400).send(e);
     }
 });
