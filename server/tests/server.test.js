@@ -40,4 +40,23 @@ describe('POST /todos', () => {
             });
 
     });
+
+    it('Should not create todo', (done) => {
+        request(app)
+            .post('/todos')
+            .send({})
+            .expect(400)
+            .end((e, res) => {
+                if(e) {
+                    return done(e);
+                }
+
+                Todo.find().then((todos) => {
+                    expect(todos.length).toBe(0);
+                    done();
+                }).catch((e) => {
+                    done(e);
+                });
+            });
+    });
 });
