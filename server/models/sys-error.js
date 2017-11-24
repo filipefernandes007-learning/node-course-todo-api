@@ -17,5 +17,5 @@ SysError.toString = () => {
 };
 
 module.exports = {
-    SysError: SysError
+    SysError: SysError,
 };
