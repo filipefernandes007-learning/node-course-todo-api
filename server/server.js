@@ -98,7 +98,9 @@ module.exports = {
 var todoRoutes = require('./routes/todo');
 //var userRoutes = require('./routes/user');
 
-var listener = app.listen(3000, () => {
-    console.log('Listen on port 3000');
-    console.log('Server started on port %d', listener.address().port);
-});
+if(!module.parent){ 
+    var listener = app.listen(3000, () => {
+        console.log('Listen on port 3000');
+        console.log('Server started on port %d', listener.address().port);
+    });
+}
