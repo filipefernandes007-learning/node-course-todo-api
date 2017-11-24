@@ -1,3 +1,4 @@
+const _ = require('lodash');
 
 /**
  *
@@ -47,7 +48,7 @@ app.get('/todos/:id', (req, res) => {
         Todo.findById(id).then((todo) => {
             if(!todo) {
                 return res.status(404)
-                          .send(new SysError({text: `Could not found todo with id=${id}`}));
+                          .send(new SysError({text: `Could not find todo with id=${id}`}));
             }
 
             res.status(200).send(todo);
@@ -60,27 +61,6 @@ app.get('/todos/:id', (req, res) => {
         }
     }
 });
-
-/*
-app.delete('/todos/:id', (req, res) => {
-    var id = req.params.id;
-  
-    if (!ObjectID.isValid(id)) {
-      return res.status(404).send(new SysError({text: 'Id not valid'}));
-    }
-  
-    Todo.findByIdAndRemove(id).then((todo) => {
-      if (!todo) {
-        return res.status(404).send(new SysError({text: `Could not found todo with id=${id}`}));
-      }
-  
-      res.send(todo);
-    }).catch((e) => {
-      res.status(400).send(e.toString());
-    });
-  });
-  */
-
   
 app.delete('/todos/:id', (req, res) => {
     try {
@@ -93,7 +73,7 @@ app.delete('/todos/:id', (req, res) => {
         Todo.findByIdAndRemove(id).then((todo) => {
             if(!todo) {
                 return res.status(404)
-                          .send(new SysError({text: `Could not found todo with id=${id}`}));
+                          .send(new SysError({text: `Could not find todo with id=${id}`}));
             }
 
             res.send(todo);
@@ -104,5 +84,38 @@ app.delete('/todos/:id', (req, res) => {
     } catch (e) {
         res.status(400).send(e.toString());
     }
+});
+
+app.patch('/todos/:id', (req, res) => {
+    try {
+        var id = req.params.id;
+
+        if(!ObjectID.isValid(id)) {
+            return res.status(404).send(new SysError({text: 'Id not valid'}));
+        }
+    
+        var body = _.pick(req.body, ['text', 'completed']);
+    
+        if(_.isBoolean(body.completed) && body.completed) {
+            body.completedAt = new Date().getTime();
+        } else {
+            body.completed   = false;
+            body.completedAt = null;
+        }
+
+        Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+           if(_.isNull(todo)) {
+               return res.status(404).send(new SysError({text: `Could not find todo with id=${id}`}));
+           }
+
+           res.send(todo);
+        }).catch((e) => {
+            res.status(400).send(e.toString());
+        });
+
+    } catch (e) {
+        res.status(400).send(e.toString());
+    }
+    
 });
 

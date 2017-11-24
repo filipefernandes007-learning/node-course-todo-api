@@ -13,14 +13,19 @@ const _ = require('lodash');
  *
  * @type {*|createApplication}
  */
-var express = require('express');
+const express = require('express');
 
 /**
  * Convert json to object
  *
  * @type {Parsers|*}
  */
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+
+/**
+ *
+ */
+const utils = require('./utils/utils');
 
 /**
  * Mongo ODM
@@ -30,11 +35,6 @@ var bodyParser = require('body-parser');
 var {mongoose}  = require('./db/mongoose');
 var {User}      = require('./models/user');
 var {SysError}  = require('./models/sys-error');
-
-/**
- *
- */
-const utils = require('./utils/utils');
 
 /**
  *
@@ -53,7 +53,6 @@ app.use(bodyParser.urlencoded({
  *
  */
 app.use((req, res, next) => {
-    debugger;
     // if is POST or PUT method, must parse JSON
     if(req.method === 'POST' || req.method === 'PUT') {
         try{
