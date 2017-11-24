@@ -39,7 +39,8 @@ const utils = require('./utils/utils');
 /**
  *
  */
-var app = express();
+var app    = express();
+const port = process.env.PORT || 3000;
 
 // middleware
 app.use(bodyParser.json());
@@ -99,8 +100,7 @@ var todoRoutes = require('./routes/todo');
 //var userRoutes = require('./routes/user');
 
 if(!module.parent){ 
-    var listener = app.listen(3000, () => {
-        console.log('Listen on port 3000');
+    var listener = app.listen(port, () => {
         console.log('Server started on port %d', listener.address().port);
     });
 }
