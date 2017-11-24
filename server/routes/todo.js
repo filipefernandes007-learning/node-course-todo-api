@@ -6,7 +6,6 @@ var {Todo}     = require('../models/todo'); // the same as var Todo = require('.
 var {SysError} = require('../models/sys-error');
 
 app.post('/todos', (req, res) => {
-    debugger;
     try{
         var data = req.body;
         var todo = new Todo(data);
