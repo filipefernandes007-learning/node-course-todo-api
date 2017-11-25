@@ -97,8 +97,8 @@ module.exports = {
 /**
  * Routes
  */
-var todoRoutes = require('./routes/todo');
-//var userRoutes = require('./routes/user');
+require('./routes/todo');
+require('./routes/user');
 
 if(!module.parent){ 
     var listener = app.listen(port, () => {

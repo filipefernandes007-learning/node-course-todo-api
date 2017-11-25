@@ -12,7 +12,9 @@ var {crud}     = require('../db/crud/crud')
 app.post('/todos', (req, res) => {
     try{
         var data = req.body;
-        var todo = new Todo(data);
+        var todo = new Todo({
+            text: data.text
+        });
 
         todo.save().then((doc) => {
             res.send(doc);
