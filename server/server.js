@@ -1,3 +1,5 @@
+require('./config/config');
+
 /**
  *
  * @type {_}
