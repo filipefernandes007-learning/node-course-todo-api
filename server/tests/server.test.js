@@ -9,8 +9,15 @@ var text = 'Test todo text';
 
 const todos = [{
     _id: new ObjectID(),
-    text: 'First Todo'
-}];
+    text: 'First test todo'
+},
+{
+    _id: new ObjectID(),
+    text: 'Second test Todo',
+    completed: true,
+    completedAt: 333
+},
+];
 
 var todoList = [];
 
@@ -134,12 +141,54 @@ describe('GET /todos:id', () => {
     
 });
 
+
+describe('PATCH /todos/:id', () => {
+    it('It should patch todo', (done) => {
+        var id = todoList[0]._id;
+
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({
+                completed: true,
+                text
+            })
+            .expect(200)
+            .expect((res) => {
+               expect(res.body.text).toBe(text);
+               expect(res.body.completed).toBe(true);
+               expect(res.body.completedAt).toBeA('number');
+            }).end(done);
+    });
+
+
+    it('It should fail for patch todo', (done) => {
+        var id   = todoList[0]._id;
+        var text = 'This should be a new test';
+
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({
+                completed: false,
+                text
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.text).toBe(text);
+                expect(res.body.completed).toBe(false);
+                expect(res.body.completedAt).toNotExist();
+            }).end(done);
+    });
+
+
+});
+
 describe('DELETE /todos/:id', () => {
     it('should remove a todo', (done) => {
       var id = todoList[0]._id;
   
       request(app)
         .delete(`/todos/${id}`)
+        .send()
         .expect(200)
         .expect((res) => {
           expect(res.body._id).toBe(id);
@@ -172,3 +221,5 @@ describe('DELETE /todos/:id', () => {
         .end(done);
     });
   });
+
+
