@@ -63,6 +63,32 @@ UserSchema.methods.generateAuthToken = function() {
     });
 };
 
+UserSchema.statics.findByToken = function (token) {
+    var User    = this; // the model
+    var decoded;
+
+    try {
+        decoded = jwt.verify(token, 'abc123');
+
+        if(!decoded._id) {
+            throw new Error('Could not find _id from JWT');
+        }
+    } catch(e) {
+        throw e;
+        /*
+        return new Promise((result, reject) => {
+            reject();
+        });
+        */
+    }
+
+    return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+    });
+};
+
 /**
  *
  */
