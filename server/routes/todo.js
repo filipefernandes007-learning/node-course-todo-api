@@ -42,6 +42,15 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
     try {
         var id = req.params.id;
+
+        crud.findById(Todo, id).then((doc) => {
+            return res.status(200).send(doc);
+        }).catch((e) => {
+            res.status(400).send(e.toString());
+        });
+
+        /*
+        var id = req.params.id;
         
         if(!ObjectID.isValid(id)) {
             return res.status(404).send(new SysError({text: 'Id not valid'}));
@@ -57,6 +66,7 @@ app.get('/todos/:id', (req, res) => {
         }).catch((e) => {
             res.status(400).send(e.toString());
         });
+        */
     } catch (e) {
         if(e) {
             res.status(400).send(e.toString());
