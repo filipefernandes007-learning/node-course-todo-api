@@ -70,7 +70,6 @@ app.use((req, res, next) => {
             if(data instanceof Object) {
                 try {
                     if(utils.isJSON(Object.keys(data)[0])) {
-                        console.log('Parse JSON');
                         data = JSON.parse(Object.keys(data)[0]);
                     }
 
