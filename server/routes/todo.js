@@ -46,7 +46,7 @@ app.get('/todos/:id', (req, res) => {
         crud.findById(Todo, id).then((doc) => {
             return res.status(200).send(doc);
         }).catch((e) => {
-            res.status(400).send(e.toString());
+            res.status(404).send(e.toString());
         });
 
         /*
@@ -69,7 +69,7 @@ app.get('/todos/:id', (req, res) => {
         */
     } catch (e) {
         if(e) {
-            res.status(400).send(e.toString());
+            res.status(404).send(e.toString());
         }
     }
 });

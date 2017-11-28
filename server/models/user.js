@@ -8,22 +8,19 @@ var UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        minlength: 1,
         trim: true,
+        minlength: 1,
         unique: true,
-        validator: (email) => {
-            return validator.isEmail(email);
-        }
-        /*
         validate: {
-            validator: validator.isEmail,
+            validator: (value) => {
+                return validator.isEmail(value);
+            },
             message: '{VALUE} is not a valid email'
         }
-        */
     },
     password: {
         type: String,
-        required: true,
+        require: true,
         minlength: 6
     },
     tokens: [{
@@ -36,21 +33,6 @@ var UserSchema = new mongoose.Schema({
             required: true
         }
     }]
-});
-
-UserSchema.pre('save', function(next) {
-    var user = this;
-
-    if (user.isModified('password')) {
-        bcrypt.genSalt(10, (e, salt) => {
-            bcrypt.hash(user.password, salt, function(e, hash) {
-                user.password = hash;
-                next();
-            });
-        });
-    } else {
-        next();
-    }
 });
 
 UserSchema.methods.toJSON = function () {
@@ -104,6 +86,21 @@ UserSchema.statics.findByToken = function (token) {
         'tokens.access': 'auth'
     });
 };
+
+UserSchema.pre('save', function(next) {
+    var user = this;
+
+    if (user.isModified('password')) {
+        bcrypt.genSalt(10, (e, salt) => {
+            bcrypt.hash(user.password, salt, function(e, hash) {
+                user.password = hash;
+                next();
+            });
+        });
+    } else {
+        next();
+    }
+});
 
 /**
  *

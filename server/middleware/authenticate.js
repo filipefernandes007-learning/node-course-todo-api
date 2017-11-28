@@ -1,11 +1,14 @@
+const _ = require('lodash');
 var {User} = require('./../models/user');
+
 
 var authenticate = (req, res, next) => {
     var token = req.header('x-auth');
 
     try {
         User.findByToken(token).then((user) => {
-            if(!user) {
+            if(!user || Object.values(user).length === 0) {
+                console.log(token);
                 return res.status(401).send();
             }
 
@@ -14,7 +17,7 @@ var authenticate = (req, res, next) => {
             next();
         });
     } catch(e) {
-        res.status(401).send(e.toString());
+        res.status(401).send(); // maybe it is an invalid signature
     }
 };
 
