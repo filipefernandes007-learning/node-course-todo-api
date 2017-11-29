@@ -8,7 +8,6 @@ var authenticate = (req, res, next) => {
     try {
         User.findByToken(token).then((user) => {
             if(!user || Object.values(user).length === 0) {
-                console.log(token);
                 return res.status(401).send();
             }
 
