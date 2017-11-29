@@ -43,7 +43,10 @@ UserSchema.methods.toJSON = function () {
 };
 
 /**
+ * methods are allowed to be called only from an instance of the schema:
  *
+ * var user = new User({email: ..., password: ..., ...});
+ * user.generateAuthToken();
  */
 UserSchema.methods.generateAuthToken = function() {
     /**
@@ -61,6 +64,11 @@ UserSchema.methods.generateAuthToken = function() {
     });
 };
 
+/**
+ * statics are allowed to be called directly from the model: User.findByToken(...)
+ * @param token
+ * @returns {Promise|Query|void|*}
+ */
 UserSchema.statics.findByToken = function (token) {
     var User = this; // the model
     var decoded;
@@ -87,6 +95,12 @@ UserSchema.statics.findByToken = function (token) {
     });
 };
 
+/**
+ *
+ * @param email
+ * @param password
+ * @returns {MPromise|Promise}
+ */
 UserSchema.statics.findByCredentials = function(email, password) {
     var User = this;
 
@@ -108,6 +122,9 @@ UserSchema.statics.findByCredentials = function(email, password) {
     });
 };
 
+/**
+ *
+ */
 UserSchema.pre('save', function(next) {
     var user = this;
 
