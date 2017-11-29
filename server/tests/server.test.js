@@ -356,5 +356,48 @@ describe('POST /users/login', () => {
             });
 
     });
-})
+});
+
+describe('GET /users/me', () => {
+    it('It should get user on token', (done) => {
+        request(app)
+            .get('/users/me')
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .end((e, res) => {
+                if(e) {
+                    return done(e);
+                }
+
+                User.findOne(users[0]._id).then((user) => {
+                    expect(res.body._id).toBe(user._id.toHexString());
+                    expect(res.body.email).toBe(user.email);
+                    done();
+                }).catch((e) => {
+                    done(e);
+                });
+            });
+    });
+});
+
+describe('DELETE /users/me/token', () => {
+    it('It should remove user token on logout', (done) => {
+        request(app)
+            .delete('/users/me/token')
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .end((e, res) => {
+                if(e) {
+                    return done(e);
+                }
+
+                User.findOne(users[0]._id).then((user) => {
+                    expect(user.tokens.length).toBe(0);
+                    done();
+                }).catch((e) => {
+                    done(e);
+                });
+            });
+    });
+});
 
