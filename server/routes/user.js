@@ -63,6 +63,7 @@ app.post('/users/login', (req, res) => {
         }
 
         User.findByCredentials(data.email, data.password).then((user) => {
+            // verify if user as already logged in
             return user.generateAuthToken().then((token) => {
                 res.header({'x-auth': token}).send(user);
             });
