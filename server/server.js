@@ -99,7 +99,7 @@ module.exports = {
 require('./routes/todo');
 require('./routes/user');
 
-if(!module.parent){ 
+if(!module.parent) {
     var listener = app.listen(port, () => {
         console.log('Server started on port %d', listener.address().port);
     });
